@@ -19,20 +19,25 @@ struct DesktopView: View {
                 ZStack(alignment: .top) {
                     VStack(spacing: metrics.sectionSpacing) {
                         pageArea(metrics: metrics, desktopOrigin: desktopOrigin)
-                            .padding(.top, metrics.pageTopPadding)
+                            .padding(
+                                .top,
+                                metrics.pageTopPadding + metrics.contentTopInset
+                            )
                         desktopAccessory
                         dock(metrics: metrics, desktopOrigin: desktopOrigin)
+                            .padding(.top, metrics.dockTopPadding)
+                            .padding(.bottom, metrics.dockBottomPadding)
                             .offset(y: metrics.dockBottomOffset)
                     }
                     .padding(.horizontal, metrics.horizontalPadding)
 
                     dragOverlays(canvasSize: canvas.size, metrics: metrics)
 
-                    editHeader
+                    editHeader(metrics: metrics)
                         .padding(.horizontal, metrics.editHeaderHorizontalPadding)
                         .offset(
                             y: model.isEditing
-                                ? -metrics.editHeaderTopOffset
+                                ? metrics.editHeaderVerticalOffset
                                 : 0
                         )
                         .zIndex(2)
@@ -47,6 +52,10 @@ struct DesktopView: View {
                 .onAppear { desktopSize = canvas.size }
                 .onChange(of: canvas.size) { _, newSize in desktopSize = newSize }
             }
+            .ignoresSafeArea(
+                .container,
+                edges: UIDevice.current.userInterfaceIdiom == .pad ? .top : []
+            )
         }
         .statusBarHidden(model.isEditing)
         .sheet(isPresented: $showsLogs) {
@@ -55,7 +64,16 @@ struct DesktopView: View {
         }
     }
 
-    private var editHeader: some View {
+    @ViewBuilder
+    private func editHeader(metrics: DesktopMetrics) -> some View {
+        if metrics.usesTabletLayout {
+            tabletEditHeader
+        } else {
+            phoneEditHeader
+        }
+    }
+
+    private var phoneEditHeader: some View {
         HStack {
             Text("编辑")
                 .font(.system(size: 15, weight: .semibold))
@@ -81,6 +99,37 @@ struct DesktopView: View {
         }
         .foregroundStyle(.white)
         .frame(height: 38)
+        .opacity(model.isEditing ? 1 : 0)
+        .allowsHitTesting(model.isEditing)
+        .animation(.easeOut(duration: 0.18), value: model.isEditing)
+    }
+
+    private var tabletEditHeader: some View {
+        HStack {
+            Image(systemName: "plus")
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(Color.black.opacity(0.58))
+                .frame(width: 64, height: 30)
+                .background(Color.white.opacity(0.88), in: Capsule())
+                .overlay {
+                    Capsule().stroke(.white.opacity(0.55), lineWidth: 0.5)
+                }
+
+            Spacer()
+
+            Button("完成") {
+                model.finishEditing()
+            }
+            .font(.system(size: 14, weight: .semibold))
+            .foregroundStyle(Color(red: 0.62, green: 0.42, blue: 0.08))
+            .padding(.horizontal, 15)
+            .frame(height: 30)
+            .background(Color.white.opacity(0.88), in: Capsule())
+            .overlay {
+                Capsule().stroke(.white.opacity(0.55), lineWidth: 0.5)
+            }
+        }
+        .frame(height: 34)
         .opacity(model.isEditing ? 1 : 0)
         .allowsHitTesting(model.isEditing)
         .animation(.easeOut(duration: 0.18), value: model.isEditing)
@@ -166,7 +215,8 @@ struct DesktopView: View {
                             item: item,
                             isEditing: model.isEditing,
                             iconSize: metrics.iconSize,
-                            showsTitle: false
+                            showsTitle: false,
+                            usesTabletStyle: metrics.usesTabletLayout
                         )
                         .opacity(
                             model.activeDragItem?.id == item.id
@@ -209,7 +259,8 @@ struct DesktopView: View {
                 isEditing: true,
                 isLifted: true,
                 iconSize: metrics.iconSize,
-                showsTitle: false
+                showsTitle: false,
+                usesTabletStyle: metrics.usesTabletLayout
             )
                 .position(location)
                 .allowsHitTesting(false)
@@ -220,7 +271,8 @@ struct DesktopView: View {
                 isEditing: true,
                 isLifted: true,
                 iconSize: metrics.iconSize,
-                showsTitle: false
+                showsTitle: false,
+                usesTabletStyle: metrics.usesTabletLayout
             )
                 .position(transfer.location)
                 .allowsHitTesting(false)
@@ -233,7 +285,8 @@ struct DesktopView: View {
                 isEditing: true,
                 isLifted: transfer.isCaptured,
                 iconSize: metrics.iconSize,
-                showsTitle: false
+                showsTitle: false,
+                usesTabletStyle: metrics.usesTabletLayout
             )
             .opacity(transfer.isCaptured ? 1 : 0.78)
             .position(location)
@@ -272,9 +325,10 @@ private struct DesktopPageView: View {
 
     var body: some View {
         GeometryReader { proxy in
+            let gridHeight = metrics.pageGridHeight ?? proxy.size.height
             let rowHeight = max(
                 metrics.iconSize + metrics.titleAreaHeight,
-                (proxy.size.height
+                (gridHeight
                     - metrics.rowSpacing * CGFloat(metrics.rowCount - 1))
                     / CGFloat(metrics.rowCount)
             )
@@ -293,7 +347,8 @@ private struct DesktopPageView: View {
                             IconView(
                                 item: item,
                                 isEditing: model.isEditing,
-                                iconSize: metrics.iconSize
+                                iconSize: metrics.iconSize,
+                                usesTabletStyle: metrics.usesTabletLayout
                             )
                                 .opacity(
                                     model.activeDragItem?.id == item.id
@@ -318,7 +373,8 @@ private struct DesktopPageView: View {
                 }
             }
             .frame(maxWidth: metrics.pageMaxWidth)
-            .frame(maxWidth: .infinity)
+            .frame(height: gridHeight, alignment: .top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
     }
 
@@ -404,6 +460,7 @@ private struct DesktopIconInteraction: ViewModifier {
 }
 
 private struct DesktopMetrics {
+    let usesTabletLayout: Bool
     let iconSize: CGFloat
     let columnCount: Int
     let rowCount: Int
@@ -417,14 +474,21 @@ private struct DesktopMetrics {
     let dockHeight: CGFloat
     let dockMaxWidth: CGFloat
     let dockCornerRadius: CGFloat
+    let dockTopPadding: CGFloat
+    let dockBottomPadding: CGFloat
     let pageMaxWidth: CGFloat
+    let pageGridHeight: CGFloat?
     let pageTopPadding: CGFloat
+    let contentTopInset: CGFloat
     let editHeaderHorizontalPadding: CGFloat
-    let editHeaderTopOffset: CGFloat
+    let editHeaderVerticalOffset: CGFloat
     let dockBottomOffset: CGFloat
 
     init(canvasSize: CGSize) {
-        let usesTabletLayout = canvasSize.width >= 600
+        usesTabletLayout = canvasSize.width >= 600
+        contentTopInset = usesTabletLayout ? 24 : 0
+        let layoutHeight = canvasSize.height - contentTopInset
+        let usesPortraitTabletGrid = usesTabletLayout && layoutHeight > canvasSize.width
         let widthBasedSize: CGFloat
         switch canvasSize.width {
         case ..<380:
@@ -434,25 +498,36 @@ private struct DesktopMetrics {
         default:
             widthBasedSize = 64
         }
-        let heightBasedSize = max(50, (canvasSize.height - 165) / 6 - 18)
+        let heightBasedSize = max(50, (layoutHeight - 165) / 6 - 18)
         iconSize = min(widthBasedSize, heightBasedSize)
-        columnCount = usesTabletLayout ? 6 : 4
-        rowCount = DesktopLayout.pageCapacity / columnCount
+        columnCount = usesTabletLayout ? (usesPortraitTabletGrid ? 5 : 6) : 4
+        rowCount = (DesktopLayout.pageCapacity + columnCount - 1) / columnCount
         horizontalPadding = usesTabletLayout ? 18 : (canvasSize.width < 380 ? 10 : 16)
-        sectionSpacing = canvasSize.height < 700 ? 4 : 7
-        rowSpacing = usesTabletLayout ? 10 : (canvasSize.height < 700 ? 2 : 5)
+        sectionSpacing = layoutHeight < 700 ? 4 : 7
+        rowSpacing = usesTabletLayout ? 10 : (layoutHeight < 700 ? 2 : 5)
         columnSpacing = usesTabletLayout ? 12 : 4
         titleAreaHeight = 20
         dockHorizontalPadding = canvasSize.width < 380 ? 8 : 11
-        dockVerticalPadding = 12
+        dockVerticalPadding = usesTabletLayout ? 16 : 12
         dockHeight = iconSize + dockVerticalPadding * 2
-        dockMaxWidth = usesTabletLayout ? 430 : .infinity
+        dockMaxWidth = usesTabletLayout ? 340 : .infinity
         dockCornerRadius = dockHeight * 0.34
-        pageMaxWidth = usesTabletLayout ? min(canvasSize.width - 36, 840) : .infinity
-        pageTopPadding = usesTabletLayout ? 0 : 22
-        editHeaderHorizontalPadding = usesTabletLayout ? 24 : 28
-        editHeaderTopOffset = usesTabletLayout ? 8 : 36
-        dockBottomOffset = usesTabletLayout ? 16 : 12
+        dockTopPadding = usesTabletLayout ? 8 : 0
+        dockBottomPadding = usesTabletLayout ? 16 : 0
+        if usesPortraitTabletGrid {
+            pageMaxWidth = min(canvasSize.width - 36, 600)
+            pageGridHeight = layoutHeight * 0.65
+        } else if usesTabletLayout {
+            pageMaxWidth = min(canvasSize.width - 72, 1_050)
+            pageGridHeight = nil
+        } else {
+            pageMaxWidth = .infinity
+            pageGridHeight = nil
+        }
+        pageTopPadding = usesPortraitTabletGrid ? 52 : (usesTabletLayout ? 0 : 22)
+        editHeaderHorizontalPadding = usesTabletLayout ? 18 : 28
+        editHeaderVerticalOffset = usesTabletLayout ? 12 : -36
+        dockBottomOffset = usesTabletLayout ? 0 : 12
     }
 }
 

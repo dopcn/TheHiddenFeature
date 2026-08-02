@@ -7,6 +7,7 @@ struct IconView: View {
     var isLifted = false
     var iconSize: CGFloat = 60
     var showsTitle = true
+    var usesTabletStyle = false
 
     @State private var wigglePhase = false
 
@@ -27,17 +28,36 @@ struct IconView: View {
                 if isEditing && !isLifted {
                     ZStack {
                         Circle()
-                            .fill(.white.opacity(0.82))
+                            .fill(
+                                usesTabletStyle
+                                    ? Color(white: 0.78).opacity(0.96)
+                                    : .white.opacity(0.82)
+                            )
                         Image(systemName: "minus")
-                            .font(.system(size: iconSize * 0.17, weight: .heavy))
-                            .foregroundStyle(Color(red: 0.18, green: 0.48, blue: 0.54))
+                            .font(
+                                .system(
+                                    size: iconSize * (usesTabletStyle ? 0.18 : 0.17),
+                                    weight: .heavy
+                                )
+                            )
+                            .foregroundStyle(
+                                usesTabletStyle
+                                    ? Color.black.opacity(0.82)
+                                    : Color(red: 0.18, green: 0.48, blue: 0.54)
+                            )
                     }
-                    .frame(width: iconSize * 0.31, height: iconSize * 0.31)
+                    .frame(
+                        width: iconSize * (usesTabletStyle ? 0.36 : 0.31),
+                        height: iconSize * (usesTabletStyle ? 0.36 : 0.31)
+                    )
                     .overlay {
                         Circle().stroke(.black.opacity(0.12), lineWidth: 0.5)
                     }
                     .shadow(color: .black.opacity(0.2), radius: 2, y: 1)
-                    .offset(x: -iconSize * 0.09, y: -iconSize * 0.09)
+                    .offset(
+                        x: -iconSize * (usesTabletStyle ? 0.11 : 0.09),
+                        y: -iconSize * (usesTabletStyle ? 0.11 : 0.09)
+                    )
                     .transition(.scale.combined(with: .opacity))
                 }
             }
@@ -49,7 +69,12 @@ struct IconView: View {
 
             if showsTitle {
                 Text(item.title)
-                    .font(.system(size: iconSize < 56 ? 10 : 12, weight: .medium))
+                    .font(
+                        .system(
+                            size: usesTabletStyle ? 13 : (iconSize < 56 ? 10 : 12),
+                            weight: .medium
+                        )
+                    )
                     .foregroundStyle(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.82)
@@ -65,10 +90,10 @@ struct IconView: View {
             )
         )
         .offset(
-            x: isEditing && !isLifted
+            x: isEditing && !isLifted && !usesTabletStyle
                 ? (wigglePhase ? 0.8 : -0.8) * phaseDirection
                 : 0,
-            y: isEditing && !isLifted
+            y: isEditing && !isLifted && !usesTabletStyle
                 ? (wigglePhase ? -0.45 : 0.45)
                 : 0
         )

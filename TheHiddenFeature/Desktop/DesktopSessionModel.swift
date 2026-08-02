@@ -54,16 +54,19 @@ final class DesktopSessionModel {
 
 #if DEBUG
     private func openLocalDesktopForDebugging() {
-        role = .left
-        layout = .preset(for: .left)
+        let localRole: DeviceRole = UIDevice.current.userInterfaceIdiom == .pad
+            ? .right
+            : .left
+        role = localRole
+        layout = .preset(for: localRole)
         currentPage = 0
         connectedPeerName = nil
         phase = .desktop
-        statusText = "本机桌面拖动调试"
+        statusText = "本机\(localRole.title)桌面拖动调试"
         if ProcessInfo.processInfo.arguments.contains("-StartInEditMode") {
             isEditing = true
         }
-        log("Debug 模式：跳过连接，直接进入本机桌面")
+        log("Debug 模式：跳过连接，直接进入\(localRole.title)桌面")
     }
 #endif
 
