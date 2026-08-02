@@ -1,0 +1,129 @@
+{
+  "" : {
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeature-primary.dia",
+    "emit-module-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeature-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeature-primary-emit-module.dia",
+    "pch" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeature-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeature-primary.swiftdeps"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/Connectivity/MultipeerTransport.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/MultipeerTransport.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/MultipeerTransport.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/MultipeerTransport.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/MultipeerTransport.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/MultipeerTransport.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/MultipeerTransport.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/MultipeerTransport.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/MultipeerTransport~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/Connectivity/PeerTransport.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerTransport.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerTransport.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerTransport.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerTransport.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerTransport.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerTransport.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerTransport.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerTransport~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/ContentView.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/Desktop/DesktopSessionModel.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopSessionModel.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopSessionModel.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopSessionModel.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopSessionModel.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopSessionModel.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopSessionModel.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopSessionModel.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopSessionModel~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/Desktop/DesktopView.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopView.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopView.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopView.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopView.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopView.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopView.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopView.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopView~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/Desktop/IconView.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/IconView.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/IconView.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/IconView.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/IconView.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/IconView.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/IconView.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/IconView.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/IconView~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/Desktop/LayoutEngine.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/LayoutEngine.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/LayoutEngine.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/LayoutEngine.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/LayoutEngine.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/LayoutEngine.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/LayoutEngine.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/LayoutEngine.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/LayoutEngine~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/Models/DesktopModels.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopModels.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopModels.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopModels.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopModels.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopModels.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopModels.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopModels.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/DesktopModels~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/Models/PeerMessages.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerMessages.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerMessages.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerMessages.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerMessages.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerMessages.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerMessages.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerMessages.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PeerMessages~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/Pairing/PairingView.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PairingView.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PairingView.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PairingView.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PairingView.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PairingView.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PairingView.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PairingView.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/PairingView~partial.swiftmodule"
+  },
+  "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/TheHiddenFeatureApp.swift" : {
+    "const-values" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeatureApp.swiftconstvalues",
+    "dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeatureApp.d",
+    "diagnostics" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeatureApp.dia",
+    "index-unit-output-path" : "/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeatureApp.o",
+    "llvm-bc" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeatureApp.bc",
+    "object" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeatureApp.o",
+    "swift-dependencies" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeatureApp.swiftdeps",
+    "swiftmodule" : "/Users/fengweizhou/Documents/TheHiddenFeature/.build/DerivedData/Build/Intermediates.noindex/TheHiddenFeature.build/Debug-iphonesimulator/TheHiddenFeature.build/Objects-normal/arm64/TheHiddenFeatureApp~partial.swiftmodule"
+  }
+}

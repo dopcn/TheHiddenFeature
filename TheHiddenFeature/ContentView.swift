@@ -8,14 +8,39 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var model = DesktopSessionModel()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if model.phase == .desktop {
+                DesktopView(model: model)
+            } else {
+                PairingView(model: model)
+            }
         }
-        .padding()
+        .preferredColorScheme(.dark)
+        .alert(
+            "连接提示",
+            isPresented: Binding(
+                get: { model.errorMessage != nil },
+                set: { if !$0 { model.errorMessage = nil } }
+            )
+        ) {
+            Button("好", role: .cancel) {
+                model.errorMessage = nil
+            }
+        } message: {
+            Text(model.errorMessage ?? "")
+        }
+        .onReceive(
+            NotificationCenter.default.publisher(
+                for: UIApplication.didEnterBackgroundNotification
+            )
+        ) { _ in
+            if model.phase != .roleSelection {
+                model.returnToRoleSelection()
+            }
+        }
     }
 }
 

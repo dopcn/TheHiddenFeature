@@ -1,0 +1,24 @@
+{
+  "source": "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/ContentView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "连接提示",
+        "location": {
+          "startingColumn": 13,
+          "startingLine": 23
+        }
+      },
+      {
+        "comment": "",
+        "key": "好",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 29
+        }
+      }
+    ]
+  },
+  "version": 1
+}

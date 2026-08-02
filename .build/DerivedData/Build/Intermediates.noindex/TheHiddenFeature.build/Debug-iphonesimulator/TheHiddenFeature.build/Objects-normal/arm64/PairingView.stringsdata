@@ -1,0 +1,80 @@
+{
+  "source": "/Users/fengweizhou/Documents/TheHiddenFeature/TheHiddenFeature/Pairing/PairingView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "请将 iPhone 或 iPad 竖屏、顶边对齐放置",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 40
+        }
+      },
+      {
+        "comment": "",
+        "key": "The Hidden Feature",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 27
+        }
+      },
+      {
+        "comment": "",
+        "key": "返回角色选择",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 153
+        }
+      },
+      {
+        "comment": "",
+        "key": "广播并等待右侧设备",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "搜索并选择左侧设备",
+        "location": {
+          "startingColumn": 74,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "在右侧设备上选择这台设备",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 113
+        }
+      },
+      {
+        "comment": "",
+        "key": "保持应用在前台，并允许本地网络访问。",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 115
+        }
+      },
+      {
+        "comment": "",
+        "key": "正在搜索附近的左侧设备…",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 128
+        }
+      },
+      {
+        "comment": "",
+        "key": "选择左侧设备",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 132
+        }
+      }
+    ]
+  },
+  "version": 1
+}
