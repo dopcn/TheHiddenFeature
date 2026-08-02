@@ -60,6 +60,9 @@ final class DesktopSessionModel {
         connectedPeerName = nil
         phase = .desktop
         statusText = "本机桌面拖动调试"
+        if ProcessInfo.processInfo.arguments.contains("-StartInEditMode") {
+            isEditing = true
+        }
         log("Debug 模式：跳过连接，直接进入本机桌面")
     }
 #endif

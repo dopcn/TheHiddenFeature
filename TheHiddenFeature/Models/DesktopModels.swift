@@ -263,11 +263,7 @@ extension DesktopLayout {
             item("播客", "dot.radiowaves.left.and.right", [.purple, .pink], "Podcasts", "A009"),
             item("测距仪", "viewfinder", [.blue, .cyan], "Measure", "A010"),
             item("健康", "heart.fill", [.pink, .red], "Health", "A011"),
-            item("文件", "folder.fill", [.blue, .indigo], "Files", "A012"),
-            item("家庭", "house.fill", [.yellow, .orange], "Home", "A013"),
-            item("音乐备忘录", "metronome.fill", [.purple, .indigo], "MusicMemos", "A014"),
-            item("查找", "location.fill", [.cyan, .blue], "FindMy", "A015"),
-            item("指南针", "safari.fill", [.blue, .mint], "Compass", "A016")
+            item("Reality Composer", "arkit", [.blue, .indigo], "RealityComposer", "A012")
         ]
         let rightItems = [
             item("日历", "calendar", [.red, .orange], "Calendar", "B001"),
@@ -279,24 +275,23 @@ extension DesktopLayout {
             item("新闻", "newspaper.fill", [.orange, .red], "News", "B007"),
             item("遥控器", "button.programmable", [.blue, .indigo], "Remote", "B008"),
             item("通讯录", "person.crop.circle.fill", [.cyan, .blue], "Contacts", "B009"),
-            item("设置", "gearshape.fill", [.indigo, .blue], "Settings", "B010"),
+            item("App Store", "a.circle.fill", [.blue, .cyan], "AppStore", "B010"),
             item("Pages", "doc.richtext.fill", [.orange, .yellow], "Pages", "B011"),
-            item("健身记录", "chart.bar.fill", [.mint, .blue], "Activity", "B012"),
-            item("iMovie", "star.fill", [.purple, .indigo], "iMovie", "B013"),
-            item("Safari", "safari.fill", [.blue, .cyan], "Safari", "B014"),
-            item("钱包", "wallet.pass.fill", [.orange, .yellow], "Wallet", "B015"),
-            item("App Store", "a.circle.fill", [.blue, .cyan], "AppStore", "B016")
+            item("健身记录", "chart.bar.fill", [.mint, .blue], "Activity", "B012")
         ]
         let items = role == .left ? leftItems : rightItems
         var firstPage = Array<DesktopItem?>(repeating: nil, count: pageCapacity)
-        var secondPage = Array<DesktopItem?>(repeating: nil, count: pageCapacity)
-        for (index, item) in items.prefix(10).enumerated() {
+        let secondPage = Array<DesktopItem?>(repeating: nil, count: pageCapacity)
+        for (index, item) in items.prefix(12).enumerated() {
             firstPage[index] = item
         }
-        for (offset, item) in items.dropFirst(10).prefix(2).enumerated() {
-            secondPage[offset] = item
-        }
-        let dockItems = Array(items.suffix(4)).map(Optional.some)
+        let dockIDPrefix = role == .left ? "C" : "D"
+        let dockItems = [
+            item("电话", "phone.fill", [.mint, .teal], "Phone", "\(dockIDPrefix)001"),
+            item("信息", "message.fill", [.mint, .teal], "Messages", "\(dockIDPrefix)002"),
+            item("Safari", "safari.fill", [.blue, .cyan], "Safari", "\(dockIDPrefix)003"),
+            item("设置", "gearshape.fill", [.indigo, .blue], "Settings", "\(dockIDPrefix)004")
+        ].map(Optional.some)
         return DesktopLayout(pages: [firstPage, secondPage], dock: dockItems)
     }
 

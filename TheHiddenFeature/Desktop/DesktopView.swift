@@ -9,33 +9,46 @@ struct DesktopView: View {
     @State private var desktopSize: CGSize = .zero
 
     var body: some View {
-        GeometryReader { canvas in
-            let metrics = DesktopMetrics(canvasSize: canvas.size)
-            let desktopOrigin = canvas.frame(in: .global).origin
-            ZStack {
-                ContinuousWallpaper(role: model.role)
+        ZStack {
+            ContinuousWallpaper(role: model.role)
+                .ignoresSafeArea()
 
-                VStack(spacing: metrics.sectionSpacing) {
+            GeometryReader { canvas in
+                let metrics = DesktopMetrics(canvasSize: canvas.size)
+                let desktopOrigin = canvas.frame(in: .global).origin
+                ZStack(alignment: .top) {
+                    VStack(spacing: metrics.sectionSpacing) {
+                        pageArea(metrics: metrics, desktopOrigin: desktopOrigin)
+                            .padding(.top, metrics.pageTopPadding)
+                        desktopAccessory
+                        dock(metrics: metrics, desktopOrigin: desktopOrigin)
+                            .offset(y: metrics.dockBottomOffset)
+                    }
+                    .padding(.horizontal, metrics.horizontalPadding)
+
+                    dragOverlays(canvasSize: canvas.size, metrics: metrics)
+
                     editHeader
-                    pageArea(metrics: metrics, desktopOrigin: desktopOrigin)
-                    desktopAccessory
-                    dock(metrics: metrics, desktopOrigin: desktopOrigin)
+                        .padding(.horizontal, metrics.editHeaderHorizontalPadding)
+                        .offset(
+                            y: model.isEditing
+                                ? -metrics.editHeaderTopOffset
+                                : 0
+                        )
+                        .zIndex(2)
                 }
-                .padding(.horizontal, metrics.horizontalPadding)
-                .padding(.bottom, metrics.bottomPadding)
-
-                dragOverlays(canvasSize: canvas.size, metrics: metrics)
+                .coordinateSpace(name: "desktop")
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    model.finishEditing()
+                }
+                .simultaneousGesture(targetTakeoverGesture(canvasSize: canvas.size))
+                .onPreferenceChange(SlotFramePreferenceKey.self) { slotFrames = $0 }
+                .onAppear { desktopSize = canvas.size }
+                .onChange(of: canvas.size) { _, newSize in desktopSize = newSize }
             }
-            .coordinateSpace(name: "desktop")
-            .contentShape(Rectangle())
-            .onTapGesture {
-                model.finishEditing()
-            }
-            .simultaneousGesture(targetTakeoverGesture(canvasSize: canvas.size))
-            .onPreferenceChange(SlotFramePreferenceKey.self) { slotFrames = $0 }
-            .onAppear { desktopSize = canvas.size }
-            .onChange(of: canvas.size) { _, newSize in desktopSize = newSize }
         }
+        .statusBarHidden(model.isEditing)
         .sheet(isPresented: $showsLogs) {
             DebugLogView(logs: model.logs)
                 .presentationDetents([.medium, .large])
@@ -44,11 +57,14 @@ struct DesktopView: View {
 
     private var editHeader: some View {
         HStack {
-            Image(systemName: "plus")
-                .font(.system(size: 17, weight: .semibold))
-                .frame(width: 34, height: 34)
-                .background(.regularMaterial, in: Circle())
-                .accessibilityHidden(true)
+            Text("编辑")
+                .font(.system(size: 15, weight: .semibold))
+                .padding(.horizontal, 16)
+                .frame(height: 34)
+                .background(.regularMaterial, in: Capsule())
+                .overlay {
+                    Capsule().stroke(.white.opacity(0.3), lineWidth: 0.75)
+                }
 
             Spacer()
 
@@ -59,6 +75,9 @@ struct DesktopView: View {
             .padding(.horizontal, 16)
             .frame(height: 34)
             .background(.regularMaterial, in: Capsule())
+            .overlay {
+                Capsule().stroke(.white.opacity(0.3), lineWidth: 0.75)
+            }
         }
         .foregroundStyle(.white)
         .frame(height: 38)
@@ -103,7 +122,12 @@ struct DesktopView: View {
                         .frame(width: 7, height: 7)
                 }
             }
+            .padding(.horizontal, 12)
             .frame(height: 28)
+            .background(.ultraThinMaterial, in: Capsule())
+            .overlay {
+                Capsule().stroke(.white.opacity(0.12), lineWidth: 0.5)
+            }
             .transition(.opacity.combined(with: .scale(scale: 0.92)))
         } else {
             HStack(spacing: 5) {
@@ -394,7 +418,10 @@ private struct DesktopMetrics {
     let dockMaxWidth: CGFloat
     let dockCornerRadius: CGFloat
     let pageMaxWidth: CGFloat
-    let bottomPadding: CGFloat
+    let pageTopPadding: CGFloat
+    let editHeaderHorizontalPadding: CGFloat
+    let editHeaderTopOffset: CGFloat
+    let dockBottomOffset: CGFloat
 
     init(canvasSize: CGSize) {
         let usesTabletLayout = canvasSize.width >= 600
@@ -417,12 +444,15 @@ private struct DesktopMetrics {
         columnSpacing = usesTabletLayout ? 12 : 4
         titleAreaHeight = 20
         dockHorizontalPadding = canvasSize.width < 380 ? 8 : 11
-        dockVerticalPadding = 9
+        dockVerticalPadding = 12
         dockHeight = iconSize + dockVerticalPadding * 2
         dockMaxWidth = usesTabletLayout ? 430 : .infinity
         dockCornerRadius = dockHeight * 0.34
         pageMaxWidth = usesTabletLayout ? min(canvasSize.width - 36, 840) : .infinity
-        bottomPadding = canvasSize.height < 700 ? 3 : 7
+        pageTopPadding = usesTabletLayout ? 0 : 22
+        editHeaderHorizontalPadding = usesTabletLayout ? 24 : 28
+        editHeaderTopOffset = usesTabletLayout ? 8 : 36
+        dockBottomOffset = usesTabletLayout ? 16 : 12
     }
 }
 

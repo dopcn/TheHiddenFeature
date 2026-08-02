@@ -27,10 +27,10 @@ struct IconView: View {
                 if isEditing && !isLifted {
                     ZStack {
                         Circle()
-                            .fill(.white)
+                            .fill(.white.opacity(0.82))
                         Image(systemName: "minus")
                             .font(.system(size: iconSize * 0.17, weight: .heavy))
-                            .foregroundStyle(Color(white: 0.28))
+                            .foregroundStyle(Color(red: 0.18, green: 0.48, blue: 0.54))
                     }
                     .frame(width: iconSize * 0.31, height: iconSize * 0.31)
                     .overlay {
@@ -49,7 +49,7 @@ struct IconView: View {
 
             if showsTitle {
                 Text(item.title)
-                    .font(.system(size: iconSize < 56 ? 10 : 11, weight: .medium))
+                    .font(.system(size: iconSize < 56 ? 10 : 12, weight: .medium))
                     .foregroundStyle(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.82)
