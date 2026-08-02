@@ -42,33 +42,12 @@ final class DesktopSessionModel {
 
     convenience init() {
         self.init(transport: MultipeerTransport())
-#if DEBUG
-        openLocalDesktopForDebugging()
-#endif
     }
 
     init(transport: any PeerTransport) {
         self.transport = transport
         observeTransport()
     }
-
-#if DEBUG
-    private func openLocalDesktopForDebugging() {
-        let localRole: DeviceRole = UIDevice.current.userInterfaceIdiom == .pad
-            ? .right
-            : .left
-        role = localRole
-        layout = .preset(for: localRole)
-        currentPage = 0
-        connectedPeerName = nil
-        phase = .desktop
-        statusText = "本机\(localRole.title)桌面拖动调试"
-        if ProcessInfo.processInfo.arguments.contains("-StartInEditMode") {
-            isEditing = true
-        }
-        log("Debug 模式：跳过连接，直接进入\(localRole.title)桌面")
-    }
-#endif
 
     func chooseRole(_ role: DeviceRole) {
         guard phase == .roleSelection else { return }
@@ -193,18 +172,16 @@ final class DesktopSessionModel {
         guard var transfer = targetTransfer else { return }
 
         if !transfer.isCaptured {
-            let expectedY = mappedTargetY(transfer, targetHeight: canvasSize.height)
-            let isNearY = abs(location.y - expectedY) <= 72
             let isNearEdge: Bool
             switch role?.sharedEdge {
             case .leading:
-                isNearEdge = location.x <= 96
+                isNearEdge = location.x <= 120
             case .trailing:
-                isNearEdge = location.x >= canvasSize.width - 96
+                isNearEdge = location.x >= canvasSize.width - 120
             case nil:
                 isNearEdge = false
             }
-            guard isNearY, isNearEdge else { return }
+            guard isNearEdge else { return }
             transfer.isCaptured = true
             transfer.transaction.phase = .accepted
             restartTransferTimeout(for: transfer.transaction.id, reason: .commitTimedOut)
@@ -587,7 +564,16 @@ final class DesktopSessionModel {
     private func restartTransferTimeout(for transactionID: UUID, reason: TransferCancelReason) {
         transferTimeoutTask?.cancel()
         transferTimeoutTask = Task { [weak self] in
-            try? await Task.sleep(for: .milliseconds(1_200))
+            let timeout: Duration
+            switch reason {
+            case .takeoverTimedOut:
+                timeout = .seconds(3)
+            case .commitTimedOut:
+                timeout = .seconds(2)
+            default:
+                timeout = .milliseconds(1_200)
+            }
+            try? await Task.sleep(for: timeout)
             guard !Task.isCancelled, let self else { return }
             if var transfer = sourceTransfer,
                transfer.transaction.id == transactionID,

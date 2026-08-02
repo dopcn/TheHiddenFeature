@@ -33,6 +33,14 @@ struct DesktopView: View {
 
                     dragOverlays(canvasSize: canvas.size, metrics: metrics)
 
+                    if model.targetTransfer != nil {
+                        Rectangle()
+                            .fill(.clear)
+                            .contentShape(Rectangle())
+                            .gesture(targetTakeoverGesture(canvasSize: canvas.size))
+                            .zIndex(3)
+                    }
+
                     editHeader(metrics: metrics)
                         .padding(.horizontal, metrics.editHeaderHorizontalPadding)
                         .offset(
