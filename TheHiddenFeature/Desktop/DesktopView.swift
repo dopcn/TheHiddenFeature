@@ -11,14 +11,15 @@ struct DesktopView: View {
     var body: some View {
         GeometryReader { canvas in
             let metrics = DesktopMetrics(canvasSize: canvas.size)
+            let desktopOrigin = canvas.frame(in: .global).origin
             ZStack {
                 ContinuousWallpaper(role: model.role)
 
                 VStack(spacing: metrics.sectionSpacing) {
                     editHeader
-                    pageArea(metrics: metrics)
+                    pageArea(metrics: metrics, desktopOrigin: desktopOrigin)
                     desktopAccessory
-                    dock(metrics: metrics)
+                    dock(metrics: metrics, desktopOrigin: desktopOrigin)
                 }
                 .padding(.horizontal, metrics.horizontalPadding)
                 .padding(.bottom, metrics.bottomPadding)
@@ -66,7 +67,10 @@ struct DesktopView: View {
         .animation(.easeOut(duration: 0.18), value: model.isEditing)
     }
 
-    private func pageArea(metrics: DesktopMetrics) -> some View {
+    private func pageArea(
+        metrics: DesktopMetrics,
+        desktopOrigin: CGPoint
+    ) -> some View {
         TabView(selection: $model.currentPage) {
             ForEach(model.layout.pages.indices, id: \.self) { pageIndex in
                 DesktopPageView(
@@ -74,6 +78,7 @@ struct DesktopView: View {
                     pageIndex: pageIndex,
                     slotFrames: slotFrames,
                     canvasSize: desktopSize,
+                    desktopOrigin: desktopOrigin,
                     metrics: metrics
                 )
                 .tag(pageIndex)
@@ -123,7 +128,10 @@ struct DesktopView: View {
         }
     }
 
-    private func dock(metrics: DesktopMetrics) -> some View {
+    private func dock(
+        metrics: DesktopMetrics,
+        desktopOrigin: CGPoint
+    ) -> some View {
         HStack(spacing: 4) {
             ForEach(0..<DesktopLayout.dockCapacity, id: \.self) { index in
                 let slot = DesktopSlot.dock(index: index)
@@ -148,7 +156,8 @@ struct DesktopView: View {
                                 item: item,
                                 slot: slot,
                                 slotFrames: slotFrames,
-                                canvasSize: desktopSize
+                                canvasSize: desktopSize,
+                                desktopOrigin: desktopOrigin
                             )
                         )
                     }
@@ -175,7 +184,8 @@ struct DesktopView: View {
                 item: item,
                 isEditing: true,
                 isLifted: true,
-                iconSize: metrics.iconSize
+                iconSize: metrics.iconSize,
+                showsTitle: false
             )
                 .position(location)
                 .allowsHitTesting(false)
@@ -185,7 +195,8 @@ struct DesktopView: View {
                 item: transfer.transaction.item,
                 isEditing: true,
                 isLifted: true,
-                iconSize: metrics.iconSize
+                iconSize: metrics.iconSize,
+                showsTitle: false
             )
                 .position(transfer.location)
                 .allowsHitTesting(false)
@@ -197,7 +208,8 @@ struct DesktopView: View {
                 item: transfer.transaction.item,
                 isEditing: true,
                 isLifted: transfer.isCaptured,
-                iconSize: metrics.iconSize
+                iconSize: metrics.iconSize,
+                showsTitle: false
             )
             .opacity(transfer.isCaptured ? 1 : 0.78)
             .position(location)
@@ -231,6 +243,7 @@ private struct DesktopPageView: View {
     let pageIndex: Int
     let slotFrames: [DesktopSlot: CGRect]
     let canvasSize: CGSize
+    let desktopOrigin: CGPoint
     let metrics: DesktopMetrics
 
     var body: some View {
@@ -270,7 +283,8 @@ private struct DesktopPageView: View {
                                         item: item,
                                         slot: slot,
                                         slotFrames: slotFrames,
-                                        canvasSize: canvasSize
+                                        canvasSize: canvasSize,
+                                        desktopOrigin: desktopOrigin
                                     )
                                 )
                         }
@@ -292,51 +306,76 @@ private struct DesktopIconInteraction: ViewModifier {
     let slot: DesktopSlot
     let slotFrames: [DesktopSlot: CGRect]
     let canvasSize: CGSize
+    let desktopOrigin: CGPoint
 
     func body(content: Content) -> some View {
         content
-            .gesture(dragGesture)
-            .simultaneousGesture(longPressGesture)
+            .highPriorityGesture(longPressDragGesture)
     }
 
-    private var longPressGesture: some Gesture {
+    private var longPressDragGesture: some Gesture {
         LongPressGesture(minimumDuration: 0.5, maximumDistance: 24)
-            .onEnded { _ in
-                model.enterEditing()
-            }
-    }
-
-    private var dragGesture: some Gesture {
-        DragGesture(minimumDistance: 0, coordinateSpace: .named("desktop"))
+            .sequenced(
+                before: DragGesture(
+                    minimumDistance: 0,
+                    coordinateSpace: .global
+                )
+            )
             .onChanged { value in
-                guard model.isEditing else { return }
-                if model.activeDragItem?.id != item.id {
-                    model.beginDragging(item, at: value.location)
+                switch value {
+                case .first(true):
+                    model.enterEditing()
+                case let .second(true, dragValue?):
+                    model.enterEditing()
+                    updateDrag(dragValue)
+                default:
+                    break
                 }
-                guard model.activeDragItem?.id == item.id else { return }
-
-                let nearest = DesktopLayoutEngine.nearestSlot(
-                    to: value.location,
-                    in: slotFrames,
-                    currentPage: model.currentPage
-                )
-                model.updateDragging(
-                    item,
-                    location: value.location,
-                    predictedEndLocation: value.predictedEndLocation,
-                    nearestSlot: nearest,
-                    canvasSize: canvasSize
-                )
             }
             .onEnded { value in
-                guard model.activeDragItem?.id == item.id else { return }
-                let nearest = DesktopLayoutEngine.nearestSlot(
-                    to: value.location,
-                    in: slotFrames,
-                    currentPage: model.currentPage
-                )
-                model.endDragging(item, nearestSlot: nearest ?? slot)
+                guard case let .second(true, dragValue?) = value else { return }
+                endDrag(dragValue)
             }
+    }
+
+    private func updateDrag(_ value: DragGesture.Value) {
+        let location = desktopLocation(from: value.location)
+        let predictedEndLocation = desktopLocation(from: value.predictedEndLocation)
+        if model.activeDragItem?.id != item.id {
+            model.beginDragging(item, at: location)
+        }
+        guard model.activeDragItem?.id == item.id else { return }
+
+        let nearest = DesktopLayoutEngine.nearestSlot(
+            to: location,
+            in: slotFrames,
+            currentPage: model.currentPage
+        )
+        model.updateDragging(
+            item,
+            location: location,
+            predictedEndLocation: predictedEndLocation,
+            nearestSlot: nearest,
+            canvasSize: canvasSize
+        )
+    }
+
+    private func endDrag(_ value: DragGesture.Value) {
+        guard model.activeDragItem?.id == item.id else { return }
+        let location = desktopLocation(from: value.location)
+        let nearest = DesktopLayoutEngine.nearestSlot(
+            to: location,
+            in: slotFrames,
+            currentPage: model.currentPage
+        )
+        model.endDragging(item, nearestSlot: nearest ?? slot)
+    }
+
+    private func desktopLocation(from globalLocation: CGPoint) -> CGPoint {
+        return CGPoint(
+            x: globalLocation.x - desktopOrigin.x,
+            y: globalLocation.y - desktopOrigin.y
+        )
     }
 }
 

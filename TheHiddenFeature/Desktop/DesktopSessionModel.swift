@@ -42,12 +42,27 @@ final class DesktopSessionModel {
 
     convenience init() {
         self.init(transport: MultipeerTransport())
+#if DEBUG
+        openLocalDesktopForDebugging()
+#endif
     }
 
     init(transport: any PeerTransport) {
         self.transport = transport
         observeTransport()
     }
+
+#if DEBUG
+    private func openLocalDesktopForDebugging() {
+        role = .left
+        layout = .preset(for: .left)
+        currentPage = 0
+        connectedPeerName = nil
+        phase = .desktop
+        statusText = "本机桌面拖动调试"
+        log("Debug 模式：跳过连接，直接进入本机桌面")
+    }
+#endif
 
     func chooseRole(_ role: DeviceRole) {
         guard phase == .roleSelection else { return }
@@ -153,12 +168,7 @@ final class DesktopSessionModel {
             return
         }
 
-        if let nearestSlot, nearestSlot != lastHoverSlot {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
-                layout.move(item, to: nearestSlot)
-            }
-            lastHoverSlot = nearestSlot
-        }
+        lastHoverSlot = nearestSlot
     }
 
     func endDragging(_ item: DesktopItem, nearestSlot: DesktopSlot?) {

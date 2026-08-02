@@ -1,2 +1,0 @@
-Target dependency graph (1 target)
-Target 'TheHiddenFeature' in project 'TheHiddenFeature' (no dependencies)

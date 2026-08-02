@@ -8,7 +8,7 @@ struct IconView: View {
     var iconSize: CGFloat = 60
     var showsTitle = true
 
-    @State private var wiggles = false
+    @State private var wigglePhase = false
 
     var body: some View {
         VStack(spacing: max(4, iconSize * 0.08)) {
@@ -60,25 +60,40 @@ struct IconView: View {
         .rotationEffect(
             .degrees(
                 isEditing && !isLifted
-                    ? (wiggles ? wiggleAngle : -wiggleAngle)
+                    ? (wigglePhase ? wiggleAngle : -wiggleAngle)
                     : 0
             )
         )
         .offset(
-            x: isEditing && !isLifted ? (wiggles ? 0.8 : -0.8) * phaseDirection : 0,
-            y: isEditing && !isLifted ? (wiggles ? -0.45 : 0.45) : 0
+            x: isEditing && !isLifted
+                ? (wigglePhase ? 0.8 : -0.8) * phaseDirection
+                : 0,
+            y: isEditing && !isLifted
+                ? (wigglePhase ? -0.45 : 0.45)
+                : 0
         )
-        .animation(
-            isEditing && !isLifted
-                ? .easeInOut(duration: wiggleDuration).repeatForever(autoreverses: true)
-                : .default,
-            value: wiggles
-        )
-        .onAppear {
-            wiggles = isEditing
-        }
-        .onChange(of: isEditing) { _, newValue in
-            wiggles = newValue
+        .task(id: isEditing && !isLifted) {
+            let shouldWiggle = isEditing && !isLifted
+            guard shouldWiggle else {
+                var transaction = Transaction()
+                transaction.disablesAnimations = true
+                withTransaction(transaction) {
+                    wigglePhase = false
+                }
+                return
+            }
+
+            wigglePhase = false
+            while !Task.isCancelled {
+                withAnimation(.easeInOut(duration: wiggleDuration)) {
+                    wigglePhase.toggle()
+                }
+                do {
+                    try await Task.sleep(for: .seconds(wiggleDuration))
+                } catch {
+                    return
+                }
+            }
         }
     }
 
