@@ -193,7 +193,7 @@ struct IconView: View {
     }
 
     private var wiggleAngle: Double {
-        1.05 + Double(item.id.uuid.1 % 4) * 0.16
+        1.4 + Double(item.id.uuid.1 % 4) * 0.18
     }
 
     private var phaseDirection: CGFloat {
