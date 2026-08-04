@@ -9,6 +9,8 @@ The app recreates an iOS-style Home Screen inside the application, connects near
 
 ## Demo
 
+https://github.com/user-attachments/assets/4037bbb5-e496-4062-916b-c4159122fcbd
+
 [![Watch The Hidden Feature demo](docs/demo-cover.jpg)](docs/demo.mp4)
 
 Click the preview to play the 32-second demonstration.
