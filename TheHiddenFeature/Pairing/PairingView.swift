@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PairingView: View {
-    @Bindable var model: DesktopSessionModel
+    @Bindable var model: AppSessionModel
 
     var body: some View {
         ZStack {
@@ -26,7 +26,11 @@ struct PairingView: View {
                 VStack(spacing: 10) {
                     Text("The Hidden Feature")
                         .font(.largeTitle.bold())
-                    Text(model.statusText)
+                    if let experience = model.selectedExperience {
+                        Text(experience.title)
+                            .font(.headline)
+                    }
+                    Text(model.connection.statusText)
                         .font(.subheadline)
                         .foregroundStyle(.white.opacity(0.7))
                         .multilineTextAlignment(.center)
@@ -37,7 +41,7 @@ struct PairingView: View {
 
                 Spacer()
 
-                Text("请将 iPhone 或 iPad 竖屏、顶边对齐放置")
+                Text(footerText)
                     .font(.footnote)
                     .foregroundStyle(.white.opacity(0.6))
             }
@@ -48,14 +52,20 @@ struct PairingView: View {
 
     @ViewBuilder
     private var pairingControls: some View {
-        switch model.phase {
+        switch model.connection.phase {
         case .roleSelection:
             VStack(spacing: 12) {
                 roleButton(.left, icon: "arrow.left.to.line")
                 roleButton(.right, icon: "arrow.right.to.line")
+                Button("返回功能选择") {
+                    model.returnToFeatureSelection()
+                }
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.72))
+                .padding(.top, 6)
             }
         case .discovering:
-            if model.role == .left {
+            if model.connection.role == .left {
                 waitingCard
             } else {
                 peerList
@@ -65,12 +75,12 @@ struct PairingView: View {
                 ProgressView()
                     .controlSize(.large)
                     .tint(.white)
-                Text(model.statusText)
+                Text(model.connection.statusText)
                     .font(.headline)
                 cancelButton
             }
             .cardStyle()
-        case .desktop:
+        case .connected:
             EmptyView()
         }
     }
@@ -122,7 +132,7 @@ struct PairingView: View {
 
     private var peerList: some View {
         VStack(spacing: 12) {
-            if model.nearbyPeers.isEmpty {
+            if model.connection.nearbyPeers.isEmpty {
                 ProgressView()
                     .tint(.white)
                 Text("正在搜索附近的左侧设备…")
@@ -132,7 +142,7 @@ struct PairingView: View {
                 Text("选择左侧设备")
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                ForEach(model.nearbyPeers) { peer in
+                ForEach(model.connection.nearbyPeers) { peer in
                     Button {
                         model.connect(to: peer)
                     } label: {
@@ -155,6 +165,13 @@ struct PairingView: View {
         }
         .font(.subheadline)
         .foregroundStyle(.white.opacity(0.72))
+    }
+
+    private var footerText: String {
+        if model.selectedExperience == .desktop {
+            return "请将 iPhone 或 iPad 竖屏、顶边对齐放置"
+        }
+        return "请在两台设备上选择不同的位置"
     }
 }
 

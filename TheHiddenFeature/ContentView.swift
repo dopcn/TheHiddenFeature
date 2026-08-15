@@ -8,38 +8,43 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var model = DesktopSessionModel()
+    @State private var model = AppSessionModel()
 
     var body: some View {
         Group {
-            if model.phase == .desktop {
-                DesktopView(model: model)
-            } else {
+            switch model.screen {
+            case .featureSelection:
+                FeatureSelectionView { experience in
+                    model.selectExperience(experience)
+                }
+            case .pairing:
                 PairingView(model: model)
+            case .desktop:
+                DesktopView(model: model.desktop)
+            case .chat:
+                ChatView(model: model.chat)
             }
         }
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(model.screen == .chat ? .light : .dark)
         .alert(
             "连接提示",
             isPresented: Binding(
-                get: { model.errorMessage != nil },
-                set: { if !$0 { model.errorMessage = nil } }
+                get: { model.connection.errorMessage != nil },
+                set: { if !$0 { model.connection.clearError() } }
             )
         ) {
             Button("好", role: .cancel) {
-                model.errorMessage = nil
+                model.connection.clearError()
             }
         } message: {
-            Text(model.errorMessage ?? "")
+            Text(model.connection.errorMessage ?? "")
         }
         .onReceive(
             NotificationCenter.default.publisher(
                 for: UIApplication.didEnterBackgroundNotification
             )
         ) { _ in
-            if model.phase != .roleSelection {
-                model.returnToRoleSelection()
-            }
+            model.handleDidEnterBackground()
         }
     }
 }

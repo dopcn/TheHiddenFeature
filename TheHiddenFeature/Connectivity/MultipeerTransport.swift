@@ -83,11 +83,10 @@ final class MultipeerTransport: NSObject, PeerTransport {
         browser.invitePeer(peer, to: session, withContext: nil, timeout: 12)
     }
 
-    func send(_ message: PeerEnvelope, reliably: Bool) async throws {
+    func send(_ data: Data, reliably: Bool) async throws {
         guard let session, !session.connectedPeers.isEmpty else {
             throw TransportError.notConnected
         }
-        let data = try JSONEncoder().encode(message)
         try session.send(
             data,
             toPeers: session.connectedPeers,

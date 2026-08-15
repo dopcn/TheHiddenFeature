@@ -1,6 +1,18 @@
 import Foundation
 
-let peerProtocolVersion = 2
+let peerProtocolVersion = 5
+
+enum ExperienceMode: String, Codable, Sendable {
+    case desktop
+    case chat
+
+    var title: String {
+        switch self {
+        case .desktop: "跨设备桌面"
+        case .chat: "双设备聊天"
+        }
+    }
+}
 
 enum DeviceFormFactor: String, Codable, Sendable {
     case phone
@@ -22,10 +34,11 @@ struct DesktopSummary: Codable, Sendable {
     let pageCount: Int
 }
 
-struct Handshake: Codable, Sendable {
+struct SessionHandshake: Codable, Sendable {
     let role: DeviceRole
+    let experience: ExperienceMode
     let deviceName: String
-    let summary: DesktopSummary
+    let desktopSummary: DesktopSummary?
 }
 
 struct TransferOffer: Codable, Sendable {
@@ -51,8 +64,7 @@ enum TransferCancelReason: String, Codable, Sendable {
     case invalidState
 }
 
-enum PeerMessage: Codable, Sendable {
-    case hello(Handshake)
+enum DesktopPeerMessage: Codable, Sendable {
     case transferRequest(TransferOffer)
     case transferPreview(TransferPreview)
     case transferAccept
@@ -61,12 +73,46 @@ enum PeerMessage: Codable, Sendable {
     case transferCancel(TransferCancelReason)
 }
 
-struct PeerEnvelope: Codable, Sendable {
+struct ChatWireMessage: Identifiable, Codable, Hashable, Sendable {
+    let id: UUID
+    let senderID: String
+    let body: String
+    let sentAt: Date
+}
+
+enum ChatPeerMessage: Codable, Sendable {
+    case send(ChatWireMessage)
+    case acknowledged(messageID: UUID)
+    case typing(ChatTypingEvent)
+    case waitingForInput(ChatWaitingForInputEvent)
+}
+
+struct ChatTypingEvent: Codable, Sendable {
+    let senderID: String
+    let phase: ChatTypingPhase
+}
+
+enum ChatTypingPhase: String, Codable, Sendable {
+    case active
+    case inactive
+}
+
+struct ChatWaitingForInputEvent: Codable, Sendable {
+    let senderID: String
+}
+
+enum SessionPayload: Codable, Sendable {
+    case hello(SessionHandshake)
+    case desktop(DesktopPeerMessage)
+    case chat(ChatPeerMessage)
+}
+
+struct SessionEnvelope: Codable, Sendable {
     let protocolVersion: Int
     let sessionID: UUID
     let sequence: UInt64
-    let transactionID: UUID?
-    let message: PeerMessage
+    let correlationID: UUID?
+    let payload: SessionPayload
 }
 
 struct TransferTransaction: Codable, Sendable {

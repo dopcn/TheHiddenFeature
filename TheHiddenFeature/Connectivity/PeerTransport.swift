@@ -24,6 +24,6 @@ protocol PeerTransport: AnyObject {
 
     func start(role: DeviceRole, generation: UInt64) async throws
     func connect(to peerID: UUID) async throws
-    func send(_ message: PeerEnvelope, reliably: Bool) async throws
+    func send(_ data: Data, reliably: Bool) async throws
     func stop() async
 }

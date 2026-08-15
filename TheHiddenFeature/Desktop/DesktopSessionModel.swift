@@ -2,22 +2,13 @@ import Observation
 import SwiftUI
 import UIKit
 
-enum AppPhase {
-    case roleSelection
-    case discovering
-    case connecting
-    case desktop
-}
-
 @MainActor
 @Observable
 final class DesktopSessionModel {
-    private(set) var phase: AppPhase = .roleSelection
-    private(set) var role: DeviceRole?
-    private(set) var nearbyPeers: [NearbyPeer] = []
-    private(set) var connectedPeerName: String?
-    private(set) var statusText = "选择这台设备的位置"
     private(set) var logs: [String] = []
+
+    var role: DeviceRole? { connection.role }
+    var connectedPeerName: String? { connection.connectedPeerName }
 
     var layout = DesktopLayout.preset(for: .left)
     var currentPage = 0
@@ -27,82 +18,42 @@ final class DesktopSessionModel {
     private(set) var sourceTransfer: SourceTransfer?
     private(set) var targetTransfer: TargetTransfer?
 
-    var errorMessage: String?
+    @ObservationIgnored
+    private let connection: PeerSessionModel
 
-    private let transport: any PeerTransport
-    private var eventTask: Task<Void, Never>?
+    @ObservationIgnored
     private var transferTimeoutTask: Task<Void, Never>?
-    private var sessionID: UUID?
-    private var sequence: UInt64 = 0
+
+    @ObservationIgnored
     private var lastPreviewSequence: UInt64 = 0
-    private var peerRole: DeviceRole?
+
+    @ObservationIgnored
     private var lastHoverSlot: DesktopSlot?
-    private var pairingGeneration: UInt64 = 0
-    private var activeTransportGeneration: UInt64?
 
-    convenience init() {
-        self.init(transport: MultipeerTransport())
+    init(connection: PeerSessionModel) {
+        self.connection = connection
     }
 
-    init(transport: any PeerTransport) {
-        self.transport = transport
-        observeTransport()
-    }
-
-    func chooseRole(_ role: DeviceRole) {
-        guard phase == .roleSelection else { return }
-        self.role = role
+    func prepare(for role: DeviceRole) {
         layout = .preset(for: role)
         currentPage = 0
-        nearbyPeers = []
-        errorMessage = nil
-        connectedPeerName = nil
-        sessionID = role == .left ? UUID() : nil
-        sequence = 0
         lastPreviewSequence = 0
-        phase = .discovering
-        statusText = role == .left ? "正在等待右侧设备连接…" : "正在搜索左侧设备…"
         log("选择角色：\(role.title)")
-        pairingGeneration &+= 1
-        let generation = pairingGeneration
-        activeTransportGeneration = generation
-
-        Task {
-            do {
-                try await transport.start(role: role, generation: generation)
-            } catch {
-                guard activeTransportGeneration == generation else { return }
-                showError(error.localizedDescription)
-                await resetConnection(preserveError: true)
-            }
-        }
     }
 
-    func connect(to peer: NearbyPeer) {
-        guard role == .right, phase == .discovering else { return }
-        phase = .connecting
-        statusText = "正在连接 \(peer.name)…"
-        let generation = activeTransportGeneration
-        Task {
-            do {
-                try await transport.connect(to: peer.id)
-            } catch {
-                guard activeTransportGeneration == generation else { return }
-                phase = .discovering
-                statusText = "连接失败，请重新选择"
-                showError(error.localizedDescription)
-            }
-        }
-    }
-
-    func returnToRoleSelection() {
-        Task {
-            await resetConnection()
-        }
+    func resetSession() {
+        transferTimeoutTask?.cancel()
+        sourceTransfer = nil
+        targetTransfer = nil
+        activeDragItem = nil
+        dragLocation = nil
+        lastHoverSlot = nil
+        lastPreviewSequence = 0
+        isEditing = false
     }
 
     func enterEditing() {
-        guard phase == .desktop, !isEditing else { return }
+        guard connection.phase == .connected, !isEditing else { return }
         isEditing = true
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
@@ -116,7 +67,7 @@ final class DesktopSessionModel {
     }
 
     func beginDragging(_ item: DesktopItem, at location: CGPoint) {
-        guard phase == .desktop, targetTransfer == nil else { return }
+        guard connection.phase == .connected, targetTransfer == nil else { return }
         if !isEditing {
             enterEditing()
         }
@@ -216,115 +167,23 @@ final class DesktopSessionModel {
         log(text)
     }
 
-    private func observeTransport() {
-        eventTask = Task { [weak self, transport] in
-            for await event in transport.events {
-                guard let self else { return }
-                await handle(event)
-            }
-        }
-    }
-
-    private func handle(_ event: PeerEvent) async {
-        guard event.generation == activeTransportGeneration else {
-            return
-        }
-
-        switch event.payload {
-        case let .peersChanged(peers):
-            nearbyPeers = peers
-        case let .connected(peerName):
-            guard role != nil, phase == .discovering || phase == .connecting else {
-                return
-            }
-            connectedPeerName = peerName
-            phase = .connecting
-            statusText = "正在与 \(peerName) 完成握手…"
-            log("Multipeer 已连接：\(peerName)")
-            if role == .left {
-                await sendHello()
-            }
-        case .disconnected:
-            guard role != nil else { return }
-            showError("附近连接已断开，当前交接已安全取消")
-            log("连接断开")
-            await resetConnection(preserveError: true)
-        case let .receivedData(data, peerName):
-            do {
-                let envelope = try JSONDecoder().decode(PeerEnvelope.self, from: data)
-                await handle(envelope)
-            } catch {
-                let message = "无法解析来自 \(peerName) 的消息：\(error.localizedDescription)"
-                showError(message)
-                log(message)
-            }
-        case let .failure(message):
-            showError(message)
-            log(message)
-        }
-    }
-
-    private func handle(_ envelope: PeerEnvelope) async {
-        guard envelope.protocolVersion == peerProtocolVersion else {
-            showError("两台设备的协议版本不兼容")
-            return
-        }
-
-        if case let .hello(handshake) = envelope.message,
-           role == .right,
-           sessionID == nil {
-            guard handshake.role == .left else { return }
-            sessionID = envelope.sessionID
-        }
-
-        guard envelope.sessionID == sessionID else {
-            log("忽略旧会话消息")
-            return
-        }
-
-        switch envelope.message {
-        case let .hello(handshake):
-            await handleHello(handshake)
+    func receive(_ message: DesktopPeerMessage, envelope: SessionEnvelope) async {
+        switch message {
         case let .transferRequest(offer):
             await receiveTransferRequest(offer, envelope: envelope)
         case let .transferPreview(preview):
             guard envelope.sequence > lastPreviewSequence else { return }
             lastPreviewSequence = envelope.sequence
-            receiveTransferPreview(preview, transactionID: envelope.transactionID)
+            receiveTransferPreview(preview, transactionID: envelope.correlationID)
         case .transferAccept:
-            await receiveTransferAccept(transactionID: envelope.transactionID)
+            await receiveTransferAccept(transactionID: envelope.correlationID)
         case .transferCommit:
-            await receiveTransferCommit(transactionID: envelope.transactionID)
+            await receiveTransferCommit(transactionID: envelope.correlationID)
         case .transferAcknowledged:
-            receiveTransferAcknowledgement(transactionID: envelope.transactionID)
+            receiveTransferAcknowledgement(transactionID: envelope.correlationID)
         case let .transferCancel(reason):
-            receiveTransferCancellation(reason: reason, transactionID: envelope.transactionID)
+            receiveTransferCancellation(reason: reason, transactionID: envelope.correlationID)
         }
-    }
-
-    private func sendHello() async {
-        guard let role else { return }
-        let hello = Handshake(
-            role: role,
-            deviceName: UIDevice.current.name,
-            summary: DesktopSummary(itemCount: layout.itemCount, pageCount: layout.pages.count)
-        )
-        await send(.hello(hello), transactionID: nil, reliably: true)
-    }
-
-    private func handleHello(_ hello: Handshake) async {
-        guard let role, hello.role == role.peerRole else {
-            showError("两台设备选择了相同位置，请重新配对")
-            await resetConnection(preserveError: true)
-            return
-        }
-        peerRole = hello.role
-        if role == .right {
-            await sendHello()
-        }
-        phase = .desktop
-        statusText = "已连接 \(hello.deviceName)"
-        log("握手完成，对端有 \(hello.summary.itemCount) 个图标")
     }
 
     private func shouldBeginTransfer(
@@ -332,7 +191,7 @@ final class DesktopSessionModel {
         predictedEndLocation: CGPoint,
         canvasSize: CGSize
     ) -> Bool {
-        guard phase == .desktop, connectedPeerName != nil, let role else { return false }
+        guard connection.phase == .connected, connectedPeerName != nil, let role else { return false }
         switch role.sharedEdge {
         case .trailing:
             return location.x >= canvasSize.width - 20
@@ -419,13 +278,13 @@ final class DesktopSessionModel {
         sourceTransfer = transfer
     }
 
-    private func receiveTransferRequest(_ offer: TransferOffer, envelope: PeerEnvelope) async {
-        guard phase == .desktop,
-              let transactionID = envelope.transactionID,
+    private func receiveTransferRequest(_ offer: TransferOffer, envelope: SessionEnvelope) async {
+        guard connection.phase == .connected,
+              let transactionID = envelope.correlationID,
               sourceTransfer == nil,
               targetTransfer == nil,
               layout.slot(containing: offer.item.id) == nil else {
-            if let transactionID = envelope.transactionID {
+            if let transactionID = envelope.correlationID {
                 await send(.transferCancel(.invalidState), transactionID: transactionID, reliably: true)
             }
             return
@@ -588,8 +447,7 @@ final class DesktopSessionModel {
                     )
                     restartTransferTimeout(for: transactionID, reason: reason)
                 } else {
-                    showError("交接确认超时，连接已重置以避免图标重复")
-                    await resetConnection(preserveError: true)
+                    await connection.failAndReset("交接确认超时，连接已重置以避免图标重复")
                 }
             } else if sourceTransfer?.transaction.id == transactionID {
                 cancelSourceTransfer(reason: reason, notifyPeer: true)
@@ -600,47 +458,18 @@ final class DesktopSessionModel {
     }
 
     private func send(
-        _ message: PeerMessage,
+        _ message: DesktopPeerMessage,
         transactionID: UUID?,
         reliably: Bool
     ) async {
-        guard let sessionID else { return }
-        sequence &+= 1
-        let envelope = PeerEnvelope(
-            protocolVersion: peerProtocolVersion,
-            sessionID: sessionID,
-            sequence: sequence,
-            transactionID: transactionID,
-            message: message
-        )
         do {
-            try await transport.send(envelope, reliably: reliably)
+            try await connection.send(
+                .desktop(message),
+                correlationID: transactionID,
+                reliably: reliably
+            )
         } catch {
             log("发送失败：\(error.localizedDescription)")
-        }
-    }
-
-    private func resetConnection(preserveError: Bool = false) async {
-        pairingGeneration &+= 1
-        activeTransportGeneration = nil
-        transferTimeoutTask?.cancel()
-        sourceTransfer = nil
-        targetTransfer = nil
-        activeDragItem = nil
-        dragLocation = nil
-        isEditing = false
-        await transport.stop()
-        role = nil
-        peerRole = nil
-        connectedPeerName = nil
-        nearbyPeers = []
-        sessionID = nil
-        sequence = 0
-        lastPreviewSequence = 0
-        phase = .roleSelection
-        statusText = "选择这台设备的位置"
-        if !preserveError {
-            errorMessage = nil
         }
     }
 
@@ -663,10 +492,6 @@ final class DesktopSessionModel {
         let scale = currentFormFactor.nominalPointsPerInch
             / transfer.sourceFormFactor.nominalPointsPerInch
         return CGFloat(transfer.sourceY * scale)
-    }
-
-    private func showError(_ message: String) {
-        errorMessage = message
     }
 
     private func log(_ message: String) {

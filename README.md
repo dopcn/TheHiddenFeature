@@ -1,8 +1,8 @@
 # The Hidden Feature
 
-The Hidden Feature is an experimental two-device iOS experience that makes an app icon appear to move directly from an iPhone to an iPad.
+The Hidden Feature is an experimental two-device iOS app with two nearby-device experiences: a simulated cross-screen Home Screen icon handoff and a direct text chat between an iPhone and an iPad.
 
-The app recreates an iOS-style Home Screen inside the application, connects nearby devices with Multipeer Connectivity, and coordinates the handoff as a drag crosses the shared screen edge.
+The app connects nearby devices with Multipeer Connectivity. Users choose the same experience on both devices, assign left/right roles, and then enter either the simulated Home Screen or a lightweight one-to-one conversation.
 
 > [!NOTE]
 > This project does not access or modify the real iOS or iPadOS Home Screen. All icons, layouts, gestures, and transfers are simulated inside the app.
@@ -24,6 +24,9 @@ Click the preview to play the 32-second demonstration.
 - Local icon dragging and layout reordering
 - Cross-device icon preview, takeover, placement, and rollback
 - Reliable transfer state synchronization over Multipeer Connectivity
+- A separate two-device chat entry with fixed left/right accounts
+- Reliable text delivery, acknowledgements, and duplicate suppression
+- iPhone and iPad chat layouts modeled after a familiar Chinese messaging interface
 
 ## Requirements
 
@@ -38,17 +41,19 @@ Click the preview to play the 32-second demonstration.
 1. Open `TheHiddenFeature.xcodeproj` in Xcode.
 2. Select your development team for the app target.
 3. Build and run the app on both devices.
-4. Choose the left-device role on the iPhone and the right-device role on the iPad.
-5. Complete nearby pairing and place the devices side by side.
-6. Enter edit mode on both devices.
-7. Drag the Reality Composer icon from the right edge of the iPhone.
-8. Continue the gesture from the left edge of the iPad, then drop the icon into place.
+4. Choose the same experience on both devices.
+5. Choose the left-device role on the iPhone and the right-device role on the iPad.
+6. Complete nearby pairing.
+7. For the desktop demo, place the devices side by side, enter edit mode, and drag an icon across the shared edge.
+8. For the chat demo, tap the message field and use the keyboard's Send key to exchange text.
 
 ## How It Works
 
 The two displays do not share one continuous system touch sequence. When the drag leaves the source screen, the source device sends the icon and transfer state to the target. The target presents an edge preview and attaches it to a new touch when the user's finger enters the second screen. A request/commit/acknowledgement protocol ensures that only one device owns the icon after the transfer completes.
 
 See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the product design, protocol, and implementation details.
+
+See [CHAT_FEATURE_DESIGN.md](CHAT_FEATURE_DESIGN.md) for the chat experience design and protocol.
 
 ## Technology
 
